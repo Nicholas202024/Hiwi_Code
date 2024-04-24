@@ -6,7 +6,7 @@ import numpy as np
 import datetime
 import pyproj
 from pyproj import transform
-import functions as fct
+import functions_hiwi as fct
 
 
 def sum_curve(data, station, date_start, date_end):
