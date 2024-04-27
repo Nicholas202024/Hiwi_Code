@@ -606,8 +606,7 @@ def resampleDf(df, agg, closed='right', label='right',
     elif leave_nan == False:
         df_agg = df.resample(agg,
                              closed=closed,
-                             label=label,
-                             base=temp_shift).sum()
+                             label=label).sum()
     if shift == True:
         df = df_copy
     return df_agg
