@@ -1073,3 +1073,43 @@ def correction_complete_amsterdam_with_primary(sec_utm, prim_utm, station_zahl, 
         data_corrected = fct.correct_data(secondary_data_df_res, df_reference_values_correct_index, 'pr', 'ams' + str(station_zahl), 0.99)   
 
     return data_corrected
+
+def list_nan_sequences(dataframe, column, min_len):
+
+    dataframe_mask = dataframe.isna()
+    column = column
+
+    list = []
+
+    count = 0
+    index_count = 0
+
+    for value in dataframe_mask[column]:
+        if value == True:
+            if count == 0:    
+                index_start = dataframe[column].index[index_count]
+                count += 1
+            else:
+                count += 1
+                if dataframe[column].index[index_count] == dataframe[column].index[-1]:
+                    index_end = dataframe[column].index[index_count]
+                    if count < min_len:
+                        pass
+                    else:
+                        list.append(count) # , index_start, index_end])
+
+        else:
+            if count == 0:
+                pass
+            else:
+                index_end = dataframe[column].index[index_count - 1]
+                if count < min_len:
+                    pass
+                else:
+                    list.append(count) # , index_start, index_end])
+                count = 0
+        index_count += 1
+
+    # print('Count of nan sequences with min len ' + str(min_len) + ':', len(list))
+
+    return list
