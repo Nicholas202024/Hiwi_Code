@@ -1113,3 +1113,80 @@ def list_nan_sequences(dataframe, column, min_len):
     # print('Count of nan sequences with min len ' + str(min_len) + ':', len(list))
 
     return list
+
+def histogramm_balken(data, column):
+
+    station = fct.list_nan_sequences(data, column, 1)
+
+    fig, ax = plt.subplots()
+
+    bins = [1, 10, 100, 1000, 10000, 100000]
+    hist = np.histogram(station, bins=bins)[0]
+
+    ax.hist(station, bins=bins, linewidth=0.5, edgecolor="white")
+
+    plt.xscale('log')
+    ticks = [10**i for i in range(6)]  # Erzeugt eine Liste [1, 10, 100, 1000]
+    plt.xticks(ticks, labels=ticks)  # Setzt die x-Achsenwerte und -Beschriftungen
+
+    plt.yscale('log')
+    ticks = [10**i for i in range(6)]  # Erzeugt eine Liste [1, 10, 100, 1000]
+    plt.yticks(ticks, labels=ticks)  # Setzt die x-Achsenwerte und -Beschriftungen
+
+    plt.xlabel('Länge der nan-Sequenz')
+    plt.ylabel('Vorkommen der Länge')
+    plt.title('Vorkommen der Längen der nan-Sequenzen in 10*i Intervallen')
+
+    plt.show()
+
+    return
+
+def histogramm_scatter(data, column):
+
+    station = fct.list_nan_sequences(data, column, 1)
+
+    absolute_frequencies = np.unique(station, return_counts=True)
+
+    x = absolute_frequencies[0]
+    y = absolute_frequencies[1]
+
+    hist = np.histogram(station, bins=[10**i for i in range(6)])[0]
+
+    # plot
+    fig, ax = plt.subplots()
+
+    ax.scatter(x, y, marker='.', alpha=0.5, edgecolors='none', s=100)
+
+    plt.hlines(hist[0], 1, 10, color='r', linestyle='--', label='Vorkommen im Intervall 10**i')
+    plt.hlines(hist[1], 10, 100, color='r', linestyle='--')
+    plt.hlines(hist[2], 100, 1000, color='r', linestyle='--')
+    plt.hlines(hist[3], 1000, 10000, color='r', linestyle='--')
+    plt.hlines(hist[4], 10000, 100000, color='r', linestyle='--')
+
+    plt.vlines(1, 0, hist[0], color='r', linestyle='--')
+    plt.vlines(10, 0, hist[0], color='r', linestyle='--')
+    plt.vlines(10, 0, hist[1], color='r', linestyle='--')
+    plt.vlines(100, 0, hist[1], color='r', linestyle='--')
+    plt.vlines(100, 0, hist[2], color='r', linestyle='--')
+    plt.vlines(1000, 0, hist[2], color='r', linestyle='--')
+    plt.vlines(1000, 0, hist[3], color='r', linestyle='--')
+    plt.vlines(10000, 0, hist[3], color='r', linestyle='--')
+    plt.vlines(10000, 0, hist[4], color='r', linestyle='--')
+    plt.vlines(100000, 0, hist[4], color='r', linestyle='--')
+
+    plt.xscale('log')
+    ticks = [10**i for i in range(6)]  # Erzeugt eine Liste [1, 10, 100, 1000]
+    plt.xticks(ticks, labels=ticks)  # Setzt die x-Achsenwerte und -Beschriftungen
+
+    plt.yscale('log')
+    plt.yticks(ticks, labels=ticks)  # Setzt die y-Achsenwerte und -Beschriftungen
+
+    plt.xlabel('Länge der nan-Sequenz')
+    plt.ylabel('Vorkommen der Länge')
+    plt.title('Vorkommen der Länge der nan-Sequenzen')
+
+    plt.legend()
+
+    plt.show()
+
+    return
