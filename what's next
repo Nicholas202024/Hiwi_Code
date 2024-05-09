@@ -1,0 +1,10 @@
+nur ganze Monate/Yahre plotten
+
+y-Skala auf feste Werte festlegen für bessere Vergleichbarkeit
+Summen Niederschlag bilden / Summenkurven erstellen/ploten, aber nur mit Timestamps wo beide zu vergleichenden Stationen Werte haben
+    auch für Jahressumme
+Schauen, ob es bei 1er-nan-Sequenzen davor/danach Niederschlag gibt
+    macht es Sinn, diese mit 0en aufzufüllen?
+2er-nan-Sequenzen anschauen
+Dataframes mit Differenz aus Vergleich von Station mit Raine verrechnen und schauen ob so die Korrelation besser wird
+Rohdaten von Lauchäcker Website anschauen und checken, ob nans wirklich Fehlerwerte sind, oder aufgrund von nicht vorhandenem Timestamp in den Rohdaten bei der Übertragung entstanden ist
