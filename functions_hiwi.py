@@ -16,7 +16,7 @@ def sum_curve(data, station, date_start, date_end):
     
     # Messwerte der Station aufsummieren
     sum_list = dataframe.cumsum().tolist()
-    sum = sum_list[-1]
+    sum = data[station][date_start:date_end].sum()
 
     # "Summendataframe" erstellen
     index_sum_df = dataframe.index
