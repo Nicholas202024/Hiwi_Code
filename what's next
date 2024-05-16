@@ -1,5 +1,3 @@
-Summen Niederschlag bilden / Summenkurven erstellen/ploten, aber nur mit Timestamps wo beide zu vergleichenden Stationen Werte haben
-    auch für Jahressumme
 Schauen, ob es bei 1er-nan-Sequenzen davor/danach Niederschlag gibt
     macht es Sinn, diese mit 0en aufzufüllen?
 2er-nan-Sequenzen anschauen
