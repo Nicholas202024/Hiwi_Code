@@ -1190,3 +1190,39 @@ def histogramm_scatter(data, column):
     plt.show()
 
     return
+
+def einer_zweier_sequ_korrigieren(data, column, _1seq=True, _2seq=True):
+    # nan die alleine Stehen oder nan-Paare zu 0 machen
+
+    station_touse = data
+
+    station = station_touse[[column]].copy()
+
+    # True für alleinstehende nans
+    mask_1seq = station.isna() & station.shift(-1).notnull() & station.shift(1).notnull()
+
+    # erste und letzte Werte extra betrachten
+    if (station.iloc[0].isna() & station.iloc[1].notnull()).bool():
+        mask_1seq.iloc[0] = True
+    if (station.iloc[-1].isna() & station.iloc[-2].notnull()).bool():
+        mask_1seq.iloc[-1] = True
+
+    # True für nan-Paare
+    mask1 = station.isna() & station.shift(-1).notnull() & station.shift(1).isna() & station.shift(2).notnull()
+    mask2 = station.isna() & station.shift(-1).isna() & station.shift(1).notnull() & station.shift(-2).notnull()
+    maske_2seq = mask1 | mask2
+
+    # erste zwei und letzte zwei Werte extra betrachten
+    if (station.iloc[0].isna() & station.iloc[1].isna() & station.iloc[2].notnull()).bool():
+        maske_2seq.iloc[0] = True
+        maske_2seq.iloc[1] = True
+    if (station.iloc[-1].isna() & station.iloc[-2].isna() & station.iloc[-3].notnull()).bool():
+        maske_2seq.iloc[-1] = True
+        maske_2seq.iloc[-2] = True
+
+    if _1seq == True:
+        station[mask_1seq] = 0
+    if _2seq == True:
+        station[maske_2seq] = 0
+    
+    return station

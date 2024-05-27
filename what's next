@@ -1,5 +1,2 @@
-Schauen, ob es bei 1er-nan-Sequenzen davor/danach Niederschlag gibt
-    macht es Sinn, diese mit 0en aufzufüllen?
-2er-nan-Sequenzen anschauen
 Dataframes mit Differenz aus Vergleich von Station mit Raine verrechnen und schauen ob so die Korrelation besser wird
 Rohdaten von Lauchäcker Website anschauen und checken, ob nans wirklich Fehlerwerte sind, oder aufgrund von nicht vorhandenem Timestamp in den Rohdaten bei der Übertragung entstanden ist
