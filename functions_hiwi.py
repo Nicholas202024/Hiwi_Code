@@ -1226,3 +1226,39 @@ def einer_zweier_sequ_korrigieren(data, column, _1seq=True, _2seq=True):
         station[maske_2seq] = 0
     
     return station
+
+def list_nan_sequences_schnell(data, station, timedelta):
+    
+    '''starts, ends, len_seq'''
+    
+    if timedelta == '1min':
+        timedelta = datetime.timedelta(minutes=1)
+    if timedelta == '5min':
+        timedelta = datetime.timedelta(minutes=5)
+    if timedelta == '1h':
+        timedelta = datetime.timedelta(hours=1)
+
+    is_nan = data[station].isna() # gibt true zurück, wenn Wert NaN ist
+    diff = is_nan.diff() # gibt true zurück, wenn Wert zu Nan oder Nan zu Wert springt
+
+    # print(is_nan)
+    # print(diff)
+
+    if is_nan[0] == True:
+        diff[0] = True
+
+    starts = diff[diff == True].index[::2]
+    ends = diff[diff == True].index[1::2] - timedelta
+
+    if is_nan[-1] == True:
+        ends = ends.append(data.index[-1:])
+    elif len(starts) > len(ends):
+        starts = starts.delete(-1)
+
+    len_seq = ((ends + timedelta) - starts)/timedelta
+    len_seq = len_seq.astype(int)
+    
+    # print('starts:', starts)
+    # print('ends:', ends)
+    
+    return starts, ends, len_seq

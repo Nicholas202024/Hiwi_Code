@@ -1,2 +1,4 @@
-Dataframes mit Differenz aus Vergleich von Station mit Raine verrechnen und schauen ob so die Korrelation besser wird
-Rohdaten von Lauchäcker Website anschauen und checken, ob nans wirklich Fehlerwerte sind, oder aufgrund von nicht vorhandenem Timestamp in den Rohdaten bei der Übertragung entstanden ist
+checken, ob es bei nan Lücken in umliegenden Stationen Niederschlag gab oder nicht
+    Station auswählen
+    Referenzniederschlag berechnen
+    für jede Lücke kontrollieren ob Niederschlag im Referenzniederschlag oder durchgängig 0
