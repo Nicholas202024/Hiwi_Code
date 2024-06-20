@@ -1524,7 +1524,7 @@ def correct_data(data, reference, y, station, quantile):
         
     return data_corrected
 
-def find_4_nearest_reference_stations(coordinates, station):
+def find_4_nearest_reference_stations_new(coordinates, station):
     
 # finde stationen, die innerhalb eines bestimmten Bereich um die Station liegen
     # set frame for search
@@ -3125,3 +3125,136 @@ def berechnung_Referenzniederschlag_amsterdam(secondary_data_df_nonan, secondary
             df_reference_values.loc[index] = h_ref
 
     return df_reference_values
+
+def coordinates_all_stations_in_range(loc_prim, loc_sec, y, station, ref1, ref2, ref3, ref4, delta, geo, ref_df, all_stations_in_range):
+    
+    if y == 'primary':
+        coords_lon = loc_prim['lon']
+        coords_lat = loc_prim['lat']
+    elif y == 'secondary':
+        coords_lon = loc_sec['lon']
+        coords_lat = loc_sec['lat']
+    elif y == 'both':
+        coords_lon_prim = loc_prim['lon']
+        coords_lat_prim = loc_prim['lat']
+        coords_lon_sec = loc_sec['lon']
+        coords_lat_sec = loc_sec['lat']
+
+    if y == 'both':
+        name_plot = 'Coordinates ' + y + ' networks'
+        plt.scatter(x=coords_lon_prim, y=coords_lat_prim, s=20, color='red', label='primary network', marker='x', linewidth=1)
+        plt.scatter(x=coords_lon_sec, y=coords_lat_sec, s=2, color='blue', label='secondary network', alpha=0.5)
+        if type(station) == int:
+            plt.scatter(loc_prim['lon'].loc[station], loc_prim['lat'].loc[station], color='black')
+        plt.legend()
+    else:
+        name_plot = 'Coordinates ' + y + ' network: ams' + str(station)
+        plt.scatter(x=coords_lon, y=coords_lat, s=10)
+        if type(station) == int:
+            if y == 'primary':
+                plt.scatter(loc_prim['lon'].loc[station], loc_prim['lat'].loc[station], color='red')
+            elif y == 'secondary':
+                plt.scatter(loc_sec['lon'].loc[station], loc_sec['lat'].loc[station], color='red')
+
+            if all_stations_in_range:
+                for station_ref in ref_df.index:
+                    plt.scatter(loc_sec['lon'].loc[station_ref], loc_sec['lat'].loc[station_ref], color='lime', s=10)
+            else:
+                try:
+                    plt.scatter(loc_sec['lon'].loc[ref1], loc_sec['lat'].loc[ref1], color='lime', s=10)
+                    plt.scatter(loc_sec['lon'].loc[ref2], loc_sec['lat'].loc[ref2], color='lime', s=10)
+                    plt.scatter(loc_sec['lon'].loc[ref3], loc_sec['lat'].loc[ref3], color='lime', s=10)
+                    plt.scatter(loc_sec['lon'].loc[ref4], loc_sec['lat'].loc[ref4], color='lime', s=10)
+                except:
+                    pass
+
+    if geo == 'circle':
+        kreis = Circle((loc_sec['lon'].loc[station], loc_sec['lat'].loc[station]), radius=1500, color='black', linewidth=0.5, fill=False)
+        plt.gca().add_patch(kreis)
+    elif geo == 'rectangle':
+        quadrat = Rectangle((loc_sec['lon'].loc[station] - 1500, loc_sec['lat'].loc[station] - 1500), 3000, 3000, color='black', linewidth=0.5, fill=False)
+        plt.hlines(loc_sec['lat'].loc[station], loc_sec['lon'].loc[station] - 1500, loc_sec['lon'].loc[station] + 1500, linewidths=0.5, color='black')
+        plt.vlines(loc_sec['lon'].loc[station], loc_sec['lat'].loc[station] - 1500, loc_sec['lat'].loc[station] + 1500, linewidths=0.5, color='black')
+        plt.gca().add_patch(quadrat) 
+
+    plt.axis('equal')
+
+    if type(delta) == int:
+        try:
+            plt.xlim(loc_sec['lon'].loc[station] - delta, loc_sec['lon'].loc[station] + delta)
+        except:
+            if ((loc_sec['lon'].loc[station] - delta) < loc_sec['lon'].min()):
+                plt.xlim(loc_sec['lon'].min(), loc_sec['lon'].loc[station] + delta)
+            if ((loc_sec['lon'].loc[station] + delta) > loc_sec['lon'].max()):
+                plt.xlim(loc_sec['lon'].loc[station] - delta, loc_sec['lon'].max())
+        try:
+            plt.ylim(loc_sec['lat'].loc[station] - delta, loc_sec['lat'].loc[station] + delta)
+        except:
+            if ((loc_sec['lat'].loc[station] - delta) < loc_sec['lat'].min()):
+                plt.ylim(loc_sec['lat'].min(), loc_sec['lat'].loc[station] + delta)
+            if ((loc_sec['lat'].loc[station] + delta) > loc_sec['lat'].max()):
+                plt.ylim(loc_sec['lat'].loc[station] - delta, loc_sec['lat'].max())
+    else:
+        pass
+    
+    plt.xlabel('longitude')
+    plt.ylabel('latitude')
+    plt.title(name_plot)
+
+    plt.show()
+    plt.close()
+    
+    return
+
+def find_all_stations_in_range(loc_prim, loc_sec, station, delta, geo, all_stations_in_range):
+    coordinates = loc_sec
+    # finde stationen, die innerhalb eines bestimmten Bereich um die Station liegen
+    # set frame for search
+    radius = 1500
+
+    # set coordinates of the station
+    lon_station = coordinates['lon'].loc[station]
+    lat_station = coordinates['lat'].loc[station]
+
+    list_reference_stations_lon = []
+    list_reference_stations_lat = []
+    list_station = []
+    list_distance = []
+
+    # find the 4 nearest stations in frame
+    for i in coordinates.index:
+        lon = coordinates['lon'].loc[i]
+        lat = coordinates['lat'].loc[i]
+        if (np.sqrt((lon - lon_station)**2 + (lat - lat_station)**2) <= radius):
+            if lon == lon_station and lat == lat_station:
+                pass
+            else:
+                # print('lon:', lon, 'lat:', lat, '\nstation nr.:', i)
+                # print('\n')
+
+                distance = round(np.sqrt((lon - lon_station)**2 + (lat - lat_station)**2), 2)
+                
+                list_distance.append(distance)
+                list_station.append(i)
+                list_reference_stations_lon.append(round(lon, 2))
+                list_reference_stations_lat.append(round(lat, 2))
+        
+        array_reference_stations = np.array([list_reference_stations_lon, list_reference_stations_lat, list_distance]).T
+        df_reference_stations = pd.DataFrame(array_reference_stations, columns=['lon', 'lat', 'distance'], index=list_station)
+
+    if all_stations_in_range:
+        coordinates_all_stations_in_range(loc_prim, loc_sec, 'secondary', station, '-', '-', '-', '-', delta, geo, df_reference_stations, all_stations_in_range)
+    else:
+        if len(df_reference_stations) == 0:
+            pass
+        elif len(df_reference_stations) == 1:
+            coordinates_all_stations_in_range(loc_prim, loc_sec, 'secondary', station, df_reference_stations.index[0], '-', '-', '-', delta, geo, df_reference_stations, all_stations_in_range)
+        elif len(df_reference_stations) == 2:
+            coordinates_all_stations_in_range(loc_prim, loc_sec, 'secondary', station, df_reference_stations.index[0], df_reference_stations.index[1], '-', '-', delta, geo, df_reference_stations, all_stations_in_range)
+        elif len(df_reference_stations) == 3:
+            coordinates_all_stations_in_range(loc_prim, loc_sec, 'secondary', station, df_reference_stations.index[0], df_reference_stations.index[1], df_reference_stations.index[2], '-', delta, geo, df_reference_stations, all_stations_in_range)
+        elif len(df_reference_stations) == 4:
+            coordinates_all_stations_in_range(loc_prim, loc_sec, 'secondary', station, df_reference_stations.index[0], df_reference_stations.index[1], df_reference_stations.index[2], df_reference_stations.index[3], delta, geo, df_reference_stations, all_stations_in_range)
+
+    return df_reference_stations
+

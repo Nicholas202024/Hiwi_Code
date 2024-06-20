@@ -1,4 +1,2 @@
-checken, ob es bei nan Lücken in umliegenden Stationen Niederschlag gab oder nicht
-    Station auswählen
-    Referenzniederschlag berechnen
-    für jede Lücke kontrollieren ob Niederschlag im Referenzniederschlag oder durchgängig 0
+berechnung_Referenzniederschlag_4_nearest Funktion anpassen, sodass alle Stationen in der Nähe verrechnet werden
+Emscherdaten Korrektur vorbereiten
