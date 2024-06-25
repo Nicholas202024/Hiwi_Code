@@ -1,2 +1,3 @@
-berechnung_Referenzniederschlag_4_nearest Funktion anpassen, sodass alle Stationen in der Nähe verrechnet werden
-Emscherdaten Korrektur vorbereiten
+Referenzstationen in die Korrektur mit einbauen
+    Label für Plot anpassen bei Korrektur_Emscher_mit_Referenz
+NaN-Analyse an den Emscher Daten machen
