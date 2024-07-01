@@ -52,7 +52,7 @@ def list_nan_sequences_schnell(data, station):
 def get_data_nan_seq_before_peak_new(data, station, quantile):
 
     # get info about nan sequences and peaks
-    starts, ends, len_seq = list_nan_sequences_schnell(data, station) # gives start, end and length of nan sequences
+    starts, ends, len_seq = ke.list_nan_sequences_schnell(data, station) # gives start, end and length of nan sequences
     peaks = data[station][data[station] > data[station].quantile(quantile)] # gives values + index of peak
 
     # check wich sequence has peak
